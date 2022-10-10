@@ -1,5 +1,6 @@
 import com.github.javafaker.Faker;
 import lombok.Value;
+import org.openqa.selenium.Keys;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -9,6 +10,8 @@ public class DataGenerator {
     private DataGenerator() {
 
     }
+
+    static String clearAll = Keys.chord(Keys.SHIFT, Keys.HOME) + Keys.DELETE;
 
     static Faker faker = new Faker(new Locale("ru"));
 
@@ -34,7 +37,7 @@ public class DataGenerator {
     }
 
     public static String generatePhone(String locale) {
-        String phone = faker.phoneNumber().cellPhone();
+        String phone = "+7" + faker.phoneNumber().cellPhone();
         return phone;
 
     }
@@ -52,12 +55,12 @@ public class DataGenerator {
                     generatePhone(locale)
             );
         }
-    }
 
-    @Value
-    public static class UserInfo {
-        String city;
-        String name;
-        String phone;
+        @Value
+        public static class UserInfo {
+            String city;
+            String name;
+            String phone;
+        }
     }
 }

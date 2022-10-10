@@ -1,7 +1,11 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static com.codeborne.selenide.Selenide.open;
+
+import java.time.Duration;
+
+import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selenide.*;
 
 class DeliveryTest {
 
@@ -18,10 +22,31 @@ class DeliveryTest {
         var firstMeetingDate = DataGenerator.generateDate(daysToAddForFirstMeeting);
         var daysToAddForSecondMeeting = 7;
         var secondMeetingDate = DataGenerator.generateDate(daysToAddForSecondMeeting);
-        // TODO: добавить логику теста в рамках которого будет выполнено планирование и перепланирование встречи.
-        // Для заполнения полей формы можно использовать пользователя validUser и строки с датами в переменных
-        // firstMeetingDate и secondMeetingDate. Можно также вызывать методы generateCity(locale),
-        // generateName(locale), generatePhone(locale) для генерации и получения в тесте соответственно города,
-        // имени и номера телефона без создания пользователя в методе generateUser(String locale) в датагенераторе
+
+
+        $("[data-test-id=city] input").setValue(validUser.getCity());
+        $("[data-test-id=name] input").setValue(validUser.getName());
+        $("[data-test-id=phone] input").setValue(validUser.getPhone());
+        $("[data-test-id=date] input").setValue(DataGenerator.clearAll);
+        $("[data-test-id=date] input").setValue(DataGenerator.generateDate(daysToAddForFirstMeeting));
+        $("[class=checkbox__text]").click();
+        $$("button").find(exactText("Запланировать")).click();
+        $("[data-test-id=success-notification]").shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification__content").shouldHave(text("Встреча успешно запланирована на " + DataGenerator.generateDate(daysToAddForFirstMeeting)), Duration.ofSeconds(15)).shouldBe(visible);
+
+        $("button.notification__closer .icon-button__content").click();
+
+        $("[data-test-id=date] input").setValue(DataGenerator.clearAll);
+        $("[data-test-id=date] input").setValue(DataGenerator.generateDate(daysToAddForSecondMeeting));
+        $$("button").find(exactText("Запланировать")).click();
+        $("[data-test-id=replan-notification]").shouldBe(visible, Duration.ofSeconds(15));
+
+
+
+        $("[data-test-id=replan-notification] .notification__content").shouldHave(text("У вас уже запланирована встреча на другую дату. Перепланировать?"), Duration.ofSeconds(15)).shouldBe(visible);
+        $$("button").find(exactText("Перепланировать")).click();
+        $("[data-test-id=success-notification]").shouldBe(visible, Duration.ofSeconds(15));
+        $(".notification__content").shouldHave(text("Встреча успешно запланирована на " + DataGenerator.generateDate(daysToAddForSecondMeeting)), Duration.ofSeconds(15)).shouldBe(visible);
+
     }
 }
