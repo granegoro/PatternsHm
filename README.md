@@ -1,0 +1,1 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/wevc14r1qv6v7804?svg=true)](https://ci.appveyor.com/project/granegoro/patternshm)
