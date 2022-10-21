@@ -5,6 +5,7 @@ import org.openqa.selenium.Keys;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Random;
 
 public class DataGenerator {
     private DataGenerator() {
@@ -25,8 +26,10 @@ public class DataGenerator {
 
     public static String generateCity(String locale) {
 
-        String city = faker.address().city();
-        return city;
+        var cities = new String[]{
+                "Москва", "Майкоп", "Уфа", "Симферополь", "Сыктывкар", "Элиста", "Махачкала", "Хабаровск"
+        };
+        return cities[new Random().nextInt(cities.length)];
 
     }
 
@@ -54,6 +57,7 @@ public class DataGenerator {
                     generateName(locale),
                     generatePhone(locale)
             );
+
         }
 
         @Value
